@@ -15,21 +15,27 @@ for this framework!
 ## Examples
 
 ### Creating a server that routes all requests to a script
-``` source $BASH_LIB/bashtron/ServerGenerator.bash { port=3000 # Define the port that the server should listen on.
+```bash
+    source $BASH_LIB/bashtron/ServerGenerator.bash 
 
+{ 
+    port=3000 # Define the port that the server should listen on.
+
+    ##
     # Generate javascript code.
     # The --default option tells the bashtron where to route any undefined routes to.
     # The --execute flag tells bashtron which script to execute
     # The --get-params option tells bashtron to append the GET parameters of the request
     # to the parameters of your script in the form [-g [ param_name ] [ param_value ]]
     # a request to /?hi=bye would result in the parameters -g hi bye for example.
+
     server route --default --execute SomeScript.bash --get-params
 
 } | node # Pipe into node for execution
 ```
 
 ### More advanced routing
-```
+```bash
 source $BASH_LIB/bashtron/ServerGenerator.bash
 
 {
