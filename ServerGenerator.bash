@@ -5,6 +5,8 @@
 
 ##
 # Generate code for server with defined routes
+# define routes by passing [ route [ options ] ] as argument
+# for every route.
 server()(
   source $BASH_LIB/bashtron/Template.bash 
   source $BASH_LIB/bashtron/RouteGenerator.bash

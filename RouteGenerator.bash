@@ -1,11 +1,19 @@
 #!/bin/bash
 
 ##
-# Print code to route to a script.
-# Default route:
-# route [ -d ] [ scriptname ] [ --with-params [ params ] ]
-# Route from a url path:
-# route [ route path ] [ scriptname ] [ --with-params [ params ] ]
+# Prints code that specifies actions for a the defined route.
+# unless the --default option is set, $1 is used as the route location.
+# Options:
+# -d --default                 | make this the default route, al undefined routes
+#                              | are redirected here.
+# -e --execute [ scriptname ]  | define the script to execute
+# -g --get-patams              | Include GET request parameters in the
+#                              | arguments of the script in the format 
+#                              | [ -g [ paramname] [ paramvalue ] ]
+# -r --split-routes            | Split the remainder of the url at every '/' and
+#                              | pass the result as arguments to the script
+# -s --static [ dirname ]      | Make this route action serve the files in the
+#                              | defined directory.
 route(){
   declare case="case '$1'"
   declare paramsParse=''

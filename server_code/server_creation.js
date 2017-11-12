@@ -15,7 +15,7 @@ http.createServer(function (request, response) {
   var splittedPathname = urlObject.pathname.split('/')
   splittedPathname.shift()
   var urlPath = splittedPathname[0]
-  console.log(urlPath)
+  console.log('REQUEST FOR ' + request.url)
   
   {{--ROUTE_SWITCH--}}
 }).listen({{--PORT--}})
