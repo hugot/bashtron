@@ -13,6 +13,7 @@ exclusively uses the native nodejs libraries. So no `node_modules` with the weig
 for this framework!
 
 ## Examples
+You can see this framework in action at [bashlord.com](http://bashlord.com) ([GitHub link](https://github.com/redrock9/bashlord.com))
 
 ### Creating a server that routes all requests to a script
 ```bash
