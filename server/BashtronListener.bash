@@ -25,7 +25,7 @@ listener(){
 
   while read instruction; do
     if [[  $instruction == +([0-9]) ]]; then
-      declare -a request${instruction}
+      declare -g -a request${instruction}
     elif [[ $instruction ==  +([0-9])' PARAM: '* ]]; then
       declare -n paramArr=request${instruction%% PARAM:*}
       declare param="${instruction##*PARAM: }"
