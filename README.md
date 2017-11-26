@@ -1,3 +1,7 @@
+# Attention: this README is not up to date, a new one is being worked on.
+In the mean time, please see [https://github.com/redrock9/bashlord.com](https://github.com/redrock9/bashlord.com)
+as an example project that works with the the latest version of bashtron.
+
 # bashtron - a web framework for bash
 Bashtron is a web framework for the bash programming language. It leverages
 the nodejs http library to host bash scripts that function as controllers and generate html.

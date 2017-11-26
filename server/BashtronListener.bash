@@ -23,13 +23,15 @@ listener(){
     exit 200
   fi
 
+  # Give the server some time to start
   sleep 5
   echo LISTENER STARTED
   exec 5<> /dev/tcp/127.0.0.1/$BASHTRON_LISTENER_PORT
   echo -n 'REQUEST??' >&5
+
   declare -a request=()
-  while read -ru 5 instruction
-  do
+  declare -i handlers=0
+  while read -ru 5 instruction; do
     if [[ $instruction == 'END' ]]; then
       handleRequest "${request[@]}" >/dev/tcp/127.0.0.1/$BASHTRON_LISTENER_PORT &
       let handlers++
