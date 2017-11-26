@@ -1,5 +1,4 @@
-#!/bin/bash
-#
+##
 # Parse temlates and fill in values for tags.
 # Template tags look like this: {{--TAG_NAME--}}.
 # tagnames passed in params are uppercased automatically.

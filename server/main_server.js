@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const http          = require('http')
 const url           = require('url')
 const child_process = require('child_process')
@@ -17,9 +19,6 @@ const mime = {
     js: 'application/javascript'
 };
 
-/**
- * The web server, communication to the outside world.
- */
 var server = http.createServer(function (request, response) {
   var urlObject = url.parse(request.url, true)
   var splittedPathname = urlObject.pathname.split('/')
@@ -32,20 +31,11 @@ var server = http.createServer(function (request, response) {
   }
 })
 
-/**
- * Constructor for a requestHandler object.
- */
-function RequestHandler() {
-  var self       = this
-  this.responses = new Map()
-  this.listeners = []
+function RequestHandler(port) {
+  var self = this
+  this.responses    = new Map()
+  this.requests     = []
 
-  /**
-   * Handle a request by passing the parameters and a response
-   * through a connection with a Bashtron Listener.
-   * @param params
-   * @param response
-   */
   this.handleRequest = function (params, response){
     var reqID        = Date.now().toString()
     var scriptParams = params
@@ -55,72 +45,66 @@ function RequestHandler() {
     var request      = reqID + "\n"
     self.responses.set(reqID, response)
 
+    console.error('new Request')
+
+    // Pass request ID and params through pipe
     scriptParams.forEach(function (param) {
       request += param + "\n"
     })
     request += 'END\n'
+    self.requests.push(request)
 
-    var listener = self.listeners.pop()
-    if (listener === undefined) {
-      response.end('No listener for server. Please notify the site owner.')
-      return
-    }
-    listener.write(request)
-    self.listeners.unshift(listener)
+    return reqID
   }
 
-  /**
-   * Send response to client.
-   * @param int    reqID
-   * @param string response
-   */
   this.respond = function (reqID, response) {
     self.responses.get(reqID).connection.end(response)
   }
 
-  /**
-   * Add a listener to the listener array.
-   */
-  this.addListener = function (socket) {
-    self.listeners.push(socket)
+  this.nextRequest = function () {
+    return self.requests.pop()
   }
 
 }
 
-// Create the server that will communicate with the external bash processes
 var handlerServer = net.createServer(function (socket) {
-  console.log('Connected' + socket.remoteAddress + ' ' + socket.remotePort)
   socket.reqID = null
   socket.recievedData = ''
   socket.setEncoding('utf-8')
+  console.log('Connected' + socket.remoteAddress + ' ' + socket.remotePort)
   var idRegex = /RESPOND ([0-9]+)/
 
   socket.on('data', function (data) {
-    // Listener initalisation
+    console.log('recieved ' + data)
     if (data ===  'REQUEST??') {
-      requestHandler.addListener(socket)
-    } 
-    // Handling response data for request
-    else if (socket.reqID != null) {
+      var waiter = setInterval(function () {
+        var req = requestHandler.nextRequest()
+        if (req !== undefined) {
+          socket.write(req)
+        }
+      }, 1)
+    } else if (socket.reqID != null) {
       socket.recievedData += data
-    } 
-    // checking if a new response is being communicated
-    else {
+    } else {
       splittedData = data.split('\n')
       var match = idRegex.exec(splittedData[0])
       if (match != null) {
+             splittedData = data.split('\n')
+        var match = idRegex.exec(splittedData[0])
+        if (match != null) {
           socket.reqID = match[1]
           splittedData.shift()
           socket.recievedData += splittedData.join('\n')
+}   socket.reqID = match[1]
+        splittedData.shift()
+        socket.recievedData += splittedData.join('\n')
       }
     }
   })
 
   socket.on('close', function () {
-    if (socket.recievedData !== undefined && socket.reqID !== undefined){
-      requestHandler.respond(socket.reqID, socket.recievedData)
-    }
-    console.log('Closed connection')
+    requestHandler.respond(socket.reqID, socket.recievedData)
+    console.error('Closed connection')
   })
 
   socket.on('error', function(err){
@@ -128,9 +112,8 @@ var handlerServer = net.createServer(function (socket) {
   })
 })
 
-// Make servers listen and communicate through requestHandler
 var requestHandler = new RequestHandler()
 handlerServer.listen({{--LISTENER_PORT--}})
 server.listen({{--SERVER_PORT--}})      
 
-console.log('server started at port {{--SERVER_PORT--}}')
+console.error('server started at port PORT')
