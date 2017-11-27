@@ -72,12 +72,12 @@ function RequestHandler() {
   /**
    * Send response to client.
    * @param int    reqID
-   * @param string response
+   * @param string responseString
    */
-  this.respond = function (reqID, response) {
+  this.respond = function (reqID, responseString) {
     var response = self.responses.get(reqID)
     if (response !== undefined && response.connection != null) {
-      self.responses.get(reqID).connection.end(response)
+      self.responses.get(reqID).connection.end(responseString)
     }
   }
 
