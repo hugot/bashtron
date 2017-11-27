@@ -75,7 +75,10 @@ function RequestHandler() {
    * @param string response
    */
   this.respond = function (reqID, response) {
-    self.responses.get(reqID).connection.end(response)
+    var response = self.responses.get(reqID)
+    if (response !== undefined && response.connection != null) {
+      self.responses.get(reqID).connection.end(response)
+    }
   }
 
   /**
