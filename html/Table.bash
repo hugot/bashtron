@@ -10,7 +10,7 @@ closeTable(){
 
 tHeaders() {
   echo "<tr>"
-  for i in $(seq 1 $#); do
+  for ((i=0; i < $#; i++)); do
     echo "<th>$1</th>"
     shift
   done
@@ -19,7 +19,7 @@ tHeaders() {
 
 tRow(){
   echo '<tr>'
-  for i in $(seq 1 $#); do
+  for ((i=0; i < $#; i++)); do
     echo "<td>$1</td>"
     shift
   done

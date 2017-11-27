@@ -1,3 +1,4 @@
+#!/bin/bash
 ##
 # Functions that listen for- and handle requests.
 
@@ -6,10 +7,10 @@
 # the handleRoute function. The handleRoute function needs to be
 # defined in the the shell that this function is called in.
 handleRequest()({
-  declare reqid="$1"
+  declare req_id="$1"
   shift
-  echo RESPOND $reqid
-  handleRoute $@
+  echo RESPOND "$req_id"
+  handleRoute "$@"
 })
 
 ##
@@ -26,14 +27,14 @@ listener(){
   # Give the server some time to start
   sleep 5
   echo LISTENER STARTED
-  exec 5<> /dev/tcp/127.0.0.1/$BASHTRON_LISTENER_PORT
+  exec 5<> /dev/tcp/127.0.0.1/"$BASHTRON_LISTENER_PORT"
   echo -n 'REQUEST??' >&5
 
   declare -a request=()
   declare -i handlers=0
   while read -ru 5 instruction; do
     if [[ $instruction == 'END' ]]; then
-      handleRequest "${request[@]}" >/dev/tcp/127.0.0.1/$BASHTRON_LISTENER_PORT &
+      handleRequest "${request[@]}" >/dev/tcp/127.0.0.1/"$BASHTRON_LISTENER_PORT" &
       let handlers++
       if [[ $handlers -eq 100 ]]; then
         disown -a

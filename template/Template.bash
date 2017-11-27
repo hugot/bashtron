@@ -1,3 +1,4 @@
+#!/bin/bash
 ##
 # Parse temlates and fill in values for tags.
 # Template tags look like this: {{--TAG_NAME--}}.
@@ -14,17 +15,17 @@ template(){
         declare values[${#values[@]}]="$2"
         ;;
       -f|--file)
-        declare FILE="$2"
+        declare file="$2"
         ;;
     esac
     shift
   done
 
-  if [[ -z $FILE ]]; then
+  if [[ -z $file ]]; then
     echo No filename specified for template. >&2
     exit 200
-  elif [[ ! -f $FILE ]]; then
-    echo File $FILE not found. >&2
+  elif [[ ! -f $file ]]; then
+    echo "File $file not found." >&2
     exit 201
   fi
 
@@ -36,10 +37,10 @@ template(){
   declare line
   while IFS='' read -r line; do
     declare tagno=0
-    for tag in ${tags[@]};do
+    for tag in "${tags[@]}";do
         line="${line//$tag/${values[$tagno]}}"
         ((tagno++))
     done
     echo -E "$line"
-  done < $FILE
+  done < "$file"
 }

@@ -5,9 +5,9 @@
 # Easy way to log server errors and events by redirecting stderr and
 # stdout to the coproc filedescriptor.
 logger(){
-  touch $1
+  touch "$1"
   while read -r line; do
     date
     echo -E "$line"
-  done >> $1
+  done >> "$1"
 }
