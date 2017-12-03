@@ -1,15 +1,5 @@
 #!/bin/bash
 
-#$'s/&/&amp;/g;
-#  s/</&lt;/g;
-#  s/>/&gt;/g;
-#  s/"/&quot;/g;
-#  s/\'/&#39;/g;
-#  s///&#x2F;/g;
-#  s/`/&#x60;/g;
-#  s/=/&#x3D;/g'
-
-
 ##
 # Escape html and assign the escaped string to a variable.
 # Fails and returns 5 if the variable is not declared yet.
